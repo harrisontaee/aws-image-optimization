@@ -60,7 +60,12 @@ type LambdaEnv = {
 };
 
 export class ImageOptimizationStack extends Stack {
-	constructor(scope: Construct, id: string, props?: StackProps) {
+	constructor(
+		scope: Construct,
+		id: string,
+		bucketName: string,
+		props?: StackProps,
+	) {
 		super(scope, id, props);
 
 		// Change stack parameters based on provided context
@@ -73,8 +78,7 @@ export class ImageOptimizationStack extends Stack {
 		S3_TRANSFORMED_IMAGE_CACHE_TTL =
 			this.node.tryGetContext("S3_TRANSFORMED_IMAGE_CACHE_TTL") ||
 			S3_TRANSFORMED_IMAGE_CACHE_TTL;
-		S3_IMAGE_BUCKET_NAME =
-			this.node.tryGetContext("S3_IMAGE_BUCKET_NAME") || S3_IMAGE_BUCKET_NAME;
+		S3_IMAGE_BUCKET_NAME = bucketName;
 		CLOUDFRONT_ORIGIN_SHIELD_REGION =
 			this.node.tryGetContext("CLOUDFRONT_ORIGIN_SHIELD_REGION") ||
 			CLOUDFRONT_ORIGIN_SHIELD_REGION;
