@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Provide default stack name
-read -p $'🥞 Stack name: \033[90m(e.g. ProjectImageOptimisationStack)\033[0m ' stack
+read -p $'🥞 Stack name: \033[90m(e.g. ProjectImageOptimiserStack)\033[0m ' stack
 
 # Exit if user inputs nothing
 if [[ $stack == "" ]]; then
