@@ -1,36 +1,49 @@
 #!/bin/bash
 
-# Initialize variables
-BUCKET_NAME=""
-STACK_NAME=""
+# Provide default stack name
+read -p $'🥞 Stack name: \033[90m(e.g. ImgTransformationStackProject)\033[0m ' stack
 
-# Parse command line arguments
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --bucket) BUCKET_NAME="$2"; shift ;;
-        --stack) STACK_NAME="$2"; shift ;;
-        *) echo "🧐 Unknown parameter passed: $1"; exit 1 ;;
-    esac
-    shift
-done
-
-# Check if both arguments were provided
-if [ -z "$BUCKET_NAME" ] || [ -z "$STACK_NAME" ]; then
-    echo "😬 Both bucket name and stack name are required."
-    exit 1
+# Exit if user inputs nothing
+if [[ $stack == "" ]]; then
+    echo "🛑 Please provide a stack name."
+    exit 0
 fi
 
-# Show the parameters
-echo "🪣  Bucket: $BUCKET_NAME"
-echo "🥞 Stack: $STACK_NAME"
+# Exit if stack name contains special characters
+if [[ ! $stack =~ ^[a-zA-Z]+$ ]]; then
+    echo "🛑 The stack name can only contain letters"
+    exit 0
+fi
 
-# Ask for user confirmation
-read -p "👍 Should we deploy? [90m(Y/n)[0m " confirmation
+# Provide default bucket name
+read -p $'🪣  Bucket name: \033[90m(e.g. project-public-uploads)\033[0m ' bucket
 
+# Exit if user inputs nothing
+if [[ $bucket == "" ]]; then
+    echo "🛑 Please provide a bucket name."
+    exit 0
+fi
+
+
+# Exit if stack name contains special characters
+if [[ ! $bucket =~ ^[a-z]+(-[a-z]+)*$ ]]; then
+    echo "🛑 The bucket name must be lowercased and kebabed"
+    exit 0
+fi
+
+# Confirmation of values
+read -p $'🚦 Are the above values unique? \033[90m(Y/n)\033[0m ' confirmation
+if [[ $confirmation == "n" ]]; then
+    echo "🛑 Deployment aborted."
+    exit 0
+fi
+
+# Confirmation to deploy
+read -p $'👍 Ready to deploy? \033[90m(Y/n)\033[0m ' confirmation
 if [[ $confirmation == "n" ]]; then
     echo "🛑 Deployment aborted."
     exit 0
 else
     echo "🚀 Deploying..."
-    BUCKET_NAME=$BUCKET_NAME STACK_NAME=$STACK_NAME cdk deploy $STACK_NAME -c S3_IMAGE_BUCKET_NAME="$BUCKET_NAME"
+    BUCKET_NAME=$bucket STACK_NAME=$stack cdk deploy $stack -c S3_IMAGE_BUCKET_NAME="$bucket"
 fi
