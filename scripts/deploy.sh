@@ -16,7 +16,7 @@ if [[ ! $stack =~ ^[a-zA-Z]+$ ]]; then
 fi
 
 # Provide default bucket name
-read -p $'🪣  Bucket name: \033[90m(e.g. project-public-uploads)\033[0m ' bucket
+read -p $'🪣 Bucket name: \033[90m(e.g. project-public-uploads)\033[0m ' bucket
 
 # Exit if user inputs nothing
 if [[ $bucket == "" ]]; then
